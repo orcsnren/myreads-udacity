@@ -1,6 +1,23 @@
-import React from 'react'
+import React from 'react';
+import * as BooksAPI from '../BooksAPI'
 
-class BookShelf extends React.Component {
+class SearchPage extends React.Component {
+
+    state = {
+        query: '',
+        books: []
+    }
+
+    updateQuery = (query) => {
+        BooksAPI.search(query.trim())
+            .then((books) => {
+                if (books.error) {
+                    this.setState(prevState => ({...prevState, books: [], query: query.trim()}))
+                } else {
+                    this.setState(prevState => ({...prevState, books: books, query: query.trim()}))
+                }
+            })
+    }
 
     updateBookShelf = (event, book) => {
         this.props.updateBook(book, event.target.value);
@@ -8,15 +25,20 @@ class BookShelf extends React.Component {
 
     render() {
 
-        const { bookShelfTitle, books } = this.props
+        const { close } = this.props
 
         return (
-            <div>
-                <div className="bookshelf">
-                    <h2 className="bookshelf-title">{bookShelfTitle}</h2>
-                    <div className="bookshelf-books">
+            <div className="search-books">
+                <div className="search-books-bar">
+                    <button className="close-search" onClick={close}>Close</button>
+                    <div className="search-books-input-wrapper">
+                        <input type="text" placeholder="Search by title or author" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)} />
+                    </div>
+                </div>
+                {(this.state.query !== '' && this.state.books.length > 0) ? (
+                    <div className="search-books-results">
                         <ol className="books-grid">
-                            {books.map((book) => (
+                            {this.state.books.map((book) => (
                                 <li key={book.id}>
                                     <div className="book">
                                         <div className="book-top">
@@ -34,15 +56,16 @@ class BookShelf extends React.Component {
                                         <div className="book-title">{book.title}</div>
                                         <div className="book-authors">
                                             {book.authors ? book.authors.join(', ') : 'Unknown Author'}
-                                        </div>
+                                        </div>)
                                     </div>
                                 </li>
                             ))}
                         </ol>
                     </div>
-                </div>
+                ) : null
+                }
             </div>
         )
     }
 }
-export default BookShelf
+export default SearchPage
