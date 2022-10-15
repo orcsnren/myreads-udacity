@@ -5,14 +5,8 @@ import './App.css'
 
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
     showSearchPage: true,
-    books : []
+    books : [],
   }
 
   componentDidMount() {
@@ -23,6 +17,33 @@ class BooksApp extends React.Component {
       }))
     })
   }
+
+  filterBooks = (shelfType) => {
+    return this.state.books.filter(book => 
+      (book.shelf === shelfType))
+  }
+  
+  updatedBookList = (updatedBook, shelf) => {
+    let newBooks = this.state.books.map(book => {
+      if(book.id === updatedBook.id){
+          return {...book , shelf : shelf}
+      }
+      return book;
+    })
+
+   return newBooks;
+    
+  }
+
+  updateBook = (book, shelf) => {
+    BooksAPI.update(book,shelf)
+    .then(() => {
+      this.setState((currentState) => ({
+        books: this.updatedBookList(book, shelf)
+      }))
+    })
+  }
+
 
   render() {
     return (
@@ -55,9 +76,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <BookShelf bookShelfTitle="Current Readings" books={this.state.books}/>
-                <BookShelf bookShelfTitle="Want to Read" books={this.state.books}/>
-                <BookShelf bookShelfTitle="Read" books={this.state.books}/>
+                <BookShelf bookShelfTitle="Current Readings" books={this.filterBooks('currentlyReading')} updateBook = {this.updateBook}/>
+                <BookShelf bookShelfTitle="Want to Read" books={this.filterBooks('wantToRead')} updateBook = {this.updateBook}/>
+                <BookShelf bookShelfTitle="Read" books={this.filterBooks('read')} updateBook = {this.updateBook}/>
               </div>
             </div>
             <div className="open-search">
