@@ -1,7 +1,8 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
-import BookShelf from './components/BookShelf'
 import SearchPage from './components/SearchPage'
+import { Route, Routes } from 'react-router-dom';
+import ListBooks from './components/ListBooks';
 import './App.css'
 
 class BooksApp extends React.Component {
@@ -40,7 +41,7 @@ class BooksApp extends React.Component {
       newBooks.push(updatedBook)
     }
     return newBooks;
-    
+
   }
 
   updateBook = (book, shelf) => {
@@ -55,25 +56,21 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <SearchPage updateBook={this.updateBook} close={() => this.setState({ showSearchPage: false })} />
-        ) : (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div>
-                <BookShelf bookShelfTitle="Current Readings" books={this.filterBooks('currentlyReading')} updateBook={this.updateBook} />
-                <BookShelf bookShelfTitle="Want to Read" books={this.filterBooks('wantToRead')} updateBook={this.updateBook} />
-                <BookShelf bookShelfTitle="Read" books={this.filterBooks('read')} updateBook={this.updateBook} />
-              </div>
-            </div>
-            <div className="open-search">
-              <button onClick={() => this.setState({ showSearchPage: true })}>Add a book</button>
-            </div>
-          </div>
-        )}
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={
+            <ListBooks filterBooks={this.filterBooks} updateBook={this.updateBook}/>
+          }
+          />
+          <Route
+            path="/search"
+            element={
+            <SearchPage updateBook={this.updateBook}/>
+          }            
+          />
+        </Routes>
       </div>
     )
   }
