@@ -6,7 +6,7 @@ const Book = ({ book, updateBookShelf }) => (
     <li key={book.id}>
         <div className="book">
             <div className="book-top">
-                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : null})` }}></div>
                 <div className="book-shelf-changer">
                     <select onChange={event => updateBookShelf(event, book)} value={book.shelf}>
                         <option value="move" disabled>Move to...</option>

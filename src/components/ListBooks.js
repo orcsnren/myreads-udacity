@@ -2,7 +2,7 @@ import React from 'react';
 import BookShelf from './BookShelf'
 import { Link } from 'react-router-dom';
 
-const ListBooks = ({ filterBooks , updateBook}) => (
+const ListBooks = ({ filterBooks, updateBook }) => (
 
     <div className="list-books">
         <div className="list-books-title">

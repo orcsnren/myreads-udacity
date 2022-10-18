@@ -7,7 +7,6 @@ import './App.css'
 
 class BooksApp extends React.Component {
   state = {
-    showSearchPage: true,
     books: []
   }
 
@@ -54,6 +53,7 @@ class BooksApp extends React.Component {
   }
 
   render() {
+
     return (
       <div className="app">
         <Routes>
@@ -61,14 +61,14 @@ class BooksApp extends React.Component {
             exact
             path="/"
             element={
-            <ListBooks filterBooks={this.filterBooks} updateBook={this.updateBook}/>
-          }
+              <ListBooks filterBooks={this.filterBooks} updateBook={this.updateBook} />
+            }
           />
           <Route
             path="/search"
             element={
-            <SearchPage updateBook={this.updateBook}/>
-          }            
+              <SearchPage updateBook={this.updateBook} myBooks={this.state.books} />
+            }
           />
         </Routes>
       </div>
